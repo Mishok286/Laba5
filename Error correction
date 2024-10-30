@@ -1,0 +1,44 @@
+using System;
+using System.Text;
+using System.Linq;
+
+public class CodeWars {
+    // Метод для кодування тексту
+    public static string Encode(string text) {
+        StringBuilder encoded = new StringBuilder();
+        
+        foreach (char c in text) {
+            string binary = Convert.ToString((int)c, 2).PadLeft(8, '0');
+            
+            // Повторення кожного біта 3 рази
+            foreach (char bit in binary) {
+                encoded.Append(bit, 3);
+            }
+        }
+        
+        return encoded.ToString();
+    }
+
+    // Метод для декодування тексту
+    public static string Decode(string bits) {
+        StringBuilder decoded = new StringBuilder();
+        
+        // Розбиваємо вхідний рядок на групи по 3 біти
+        for (int i = 0; i < bits.Length; i += 24) {
+            StringBuilder byteBuilder = new StringBuilder();
+            
+            for (int j = i; j < i + 24; j += 3) {
+                // Беремо групу з трьох бітів та визначаємо найчастіший символ
+                string triplet = bits.Substring(j, 3);
+                char correctedBit = triplet.Count(b => b == '1') > 1 ? '1' : '0';
+                byteBuilder.Append(correctedBit);
+            }
+            
+            // Конвертуємо 8-бітну двійкову групу в ASCII-символ
+            int asciiValue = Convert.ToInt32(byteBuilder.ToString(), 2);
+            decoded.Append((char)asciiValue);
+        }
+        
+        return decoded.ToString();
+    }
+}
